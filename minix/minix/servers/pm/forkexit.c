@@ -124,9 +124,10 @@ int do_fork()
   tell_vfs(rmc, &m);
 
   /* Tell the tracer, if any, about the new child */
-  if (rmc->mp_tracer != NO_TRACER)
-	sig_proc(rmc, SIGSTOP, TRUE /*trace*/, FALSE /* ksig */);
-
+  if (rmc->mp_tracer != NO_TRACER){
+	  sig_proc(rmc, SIGSTOP, TRUE /*trace*/, FALSE /* ksig */);
+  }
+   printf("Minix: PID %d created\n", new_pid);
   /* Do not reply until VFS is ready to process the fork
   * request
   */
@@ -242,6 +243,7 @@ int do_exit()
   }
   else {
       exit_proc(mp, m_in.m_lc_pm_exit.status, FALSE /*dump_core*/);
+      printf("Minix: %d PID exited\n",mp->mp_pid);
   }
   return(SUSPEND);		/* can't communicate from beyond the grave */
 }
@@ -387,6 +389,7 @@ int dump_core;			/* flag indicating whether to dump core */
 
   /* Send a hangup to the process' process group if it was a session leader. */
   if (procgrp != 0) check_sig(-procgrp, SIGHUP, FALSE /* ksig */);
+  
 }
 
 /*===========================================================================*
